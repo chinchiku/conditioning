@@ -845,7 +845,7 @@
             input = input.trim();
             
             // URLからIDを抽出 (例: .../d/THIS_IS_THE_ID/edit... or .../d/THIS_IS_THE_ID)
-            const urlMatch = input.match(/\/d\/([a-zA-Z0--9_-]{44})/);
+            const urlMatch = input.match(///d\/([a-zA-Z0--9_-]{44}));
             if (urlMatch && urlMatch[1]) {
                 console.log("Extracted ID from URL:", urlMatch[1]);
                 return urlMatch[1];
@@ -1366,7 +1366,7 @@
                 }
             }
             
-            const dateRegex = /^\s*"?\s*(\d{4}[-\/]\d{1,2}[-\/]\d{1,2}|\d{1,2}\/\d{1,2})\s*"?\s*$/i;
+            const dateRegex = /^\s*"?\\[s]*(\d{4}[-\/]\d{1,2}[-\/]\d{1,2}|\d{1,2}\/\d{1,2})\s*"?\s*$/i;
             const data = [];
 
             // valueRanges は [ { values: [...] }, { values: [...] } ] という構造
@@ -1411,7 +1411,7 @@
 
         // 手動入力データ用のパーサー
         function parseManualData(manualText, mapping) {
-            const dateRegex = /^\s*"?\s*(\d{4}[-\/]\d{1,2}[-\/]\d{1,2}|\d{1,2}\/\d{1,2})\s*"?\s*$/i;
+            const dateRegex = /^\s*"?\\[s]*(\d{4}[-\/]\d{1,2}[-\/]\d{1,2}|\d{1,2}\/\d{1,2})\s*"?\s*$/i;
             const lines = manualText.trim().split('\n');
             const data = [];
             
@@ -1486,7 +1486,7 @@
                         baseData = parseManualData(manualData, settings.mapping); // baseData をセット
                     }
                     
-                } else {
+                } else { // Google連携の場合
                     // --- Google連携の場合 ---
                     console.log("Loading data from: Google Sheets API");
                     if (!googleTokenResponse || !googleTokenResponse.access_token) {
@@ -1744,7 +1744,7 @@
         function updateDashboard(data) {
             
             const metrics = [
-                { 
+                {
                     key: 'distance', 
                     el: document.getElementById('summary-distance'), 
                     changeEl: document.getElementById('summary-distance-change'), 
@@ -1752,7 +1752,7 @@
                     unit: 'km', 
                     avgUnit: 'km/日'
                 },
-                { 
+                {
                     key: 'morningWeight', 
                     el: document.getElementById('summary-morning-weight'), 
                     changeEl: document.getElementById('summary-morning-weight-change'), 
@@ -1760,7 +1760,7 @@
                     unit: 'kg', 
                     avgUnit: 'kg'
                 },
-                { 
+                {
                     key: 'eveningWeight', 
                     el: document.getElementById('summary-evening-weight'), 
                     changeEl: document.getElementById('summary-evening-weight-change'), 
@@ -1768,7 +1768,7 @@
                     unit: 'kg', 
                     avgUnit: 'kg'
                 },
-                { 
+                {
                     key: 'wakingHr', 
                     el: document.getElementById('summary-waking-hr'), 
                     changeEl: document.getElementById('summary-waking-hr-change'), 
@@ -1776,7 +1776,7 @@
                     unit: 'bpm', 
                     avgUnit: 'bpm'
                 },
-                { 
+                {
                     key: 'sleep', 
                     el: document.getElementById('summary-sleep'), 
                     changeEl: document.getElementById('summary-sleep-change'), 
@@ -1861,7 +1861,7 @@
                     data: {
                         labels: [], 
                         datasets: [
-                            { 
+                            {
                                 label: '走行距離 (km)', 
                                 data: [], 
                                 borderColor: 'rgb(59, 130, 246)', // blue-600
@@ -1869,7 +1869,7 @@
                                 spanGaps: true,
                                 hidden: true 
                             },
-                            { 
+                            {
                                 label: '朝体重 (kg)', 
                                 data: [], 
                                 borderColor: 'rgb(34, 197, 94)', // green-500
@@ -1877,7 +1877,7 @@
                                 spanGaps: true,
                                 hidden: false 
                             },
-                            { 
+                            {
                                 label: '夕体重 (kg)', 
                                 data: [], 
                                 borderColor: 'rgb(5, 150, 105)', // emerald-600
@@ -1885,8 +1885,8 @@
                                 spanGaps: true,
                                 hidden: true 
                             },
-                            { 
-                                label: '起床時脈拍', 
+                            {
+                                label: '起床時脈拍',
                                 data: [], 
                                 borderColor: 'rgb(239, 68, 68)', // red-500
                                 yAxisID: 'yHR', 
@@ -2170,7 +2170,7 @@
 
             return dailyAvg.toFixed(1);
         }
-
+        
         function showPlanForm(show = true) {
             if (planFormContainer) {
                 planFormContainer.style.display = show ? 'block' : 'none';
@@ -2241,7 +2241,7 @@
             const dailyAvgDistance = parseFloat(planAvgDistanceSpan.textContent); 
             const duration = parseInt(planDuration.value, 10); 
             const finalLoad = parseInt(planFinalLoad.value, 10); 
-            const editId = planEditId.value; 
+            const editId = planEditId.value;
 
             // 2. バリデーション
             if (!raceDateStr || isNaN(duration) || isNaN(dailyAvgDistance) || dailyAvgDistance <= 0 || isNaN(finalLoad)) {
@@ -2549,8 +2549,7 @@
                 if (settings && settings.dataSource === 'manual') {
                     console.log("Initial load for manual data source.");
                     await loadAndDisplayData(settings);
-                } else {
-                    // Google連携の場合、または設定がまだない場合
+                } else { // Google連携の場合、または設定がまだない場合
                     console.log("Google data source selected or no settings yet. Waiting for auth flow.");
                     const loadingEl = document.getElementById('dashboard-loading');
                     const summaryTopEl = document.getElementById('dashboard-summary-top');
