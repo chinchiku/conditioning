@@ -1412,6 +1412,7 @@
 
         // 手動入力データ用のパーサー
         // 手動入力データ用のパーサー
+        // 手動入力データ用のパーサー
         function parseManualData(manualText, mapping) {
             const dateRegex = /^\s*"?\s*(\d{4}[-\/]\d{1,2}[-\/]\d{1,2}|\d{1,2}\/\d{1,2}|\d{1,2}月\d{1,2}日?)\s*"?\s*$/i; // 日本語対応
             const lines = manualText.trim().split('\n');
@@ -1430,23 +1431,25 @@
                          const trimmedVal = val.trim().replace(/^["']|["']$/g, '').trim();
                          if (trimmedVal === "") return null;
                          const num = parseFloat(trimmedVal);
-                         return isNaN(num) ? null : num;
+                   return isNaN(num) ? null : num;
                     };
                     const cleanDate = dateVal.trim().replace(/^["']|["']$/g, '').trim();
                     
                     data.push({
+
                         date: cleanDate,
                         distance: cleanValue(distVal),
                         morningWeight: null,
-                        eveningWeight: null,
+                  eveningWeight: null,
                         wakingHr: null,
+
                         practiceHr: null,
                         sleep: null,
-                    });
+A                });
                 }
             }
             return data;
-        }
+     }
 
 
         // データ読み込みのメインロジック (GAPI/手動 分岐)
