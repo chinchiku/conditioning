@@ -845,7 +845,7 @@
             input = input.trim();
             
             // URLからIDを抽出 (例: .../d/THIS_IS_THE_ID/edit... or .../d/THIS_IS_THE_ID)
-            const urlMatch = input.match(/\/d\/([a-zA-Z0--9_-]{44})/);
+            const urlMatch = input.match(/\/d\/([a-zA-Z0-9_-]{44})/);
             if (urlMatch && urlMatch[1]) {
                 console.log("Extracted ID from URL:", urlMatch[1]);
                 return urlMatch[1];
