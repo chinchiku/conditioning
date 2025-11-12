@@ -1375,7 +1375,7 @@
                 const lines = sheetData.values || [];
                 
                 // 2行1組で処理するため、インデックスを使ったループに変更
-                for (let i = 0; i < lines.length; i += 2) { 
+                for (let i = 0; i < lines.length; i++) { 
                     const columns = lines[i]; // 2行のうちの1行目 (結合セルの値が入っている行)
                     
                     if (!columns) continue; // lines[i] が存在しない場合 (例: 奇数行)
