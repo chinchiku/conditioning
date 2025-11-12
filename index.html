@@ -1695,55 +1695,43 @@
         }
         
         function calculateWeeklyAverage(data, key) {
-            if (!data || data.length === 0) {
-                return null;
-            }
+            if (!data || data.length === 0) {
+                return null;
+            }
 
-            // Find the latest valid date in the dataset
-            const latestDateInData = data.reduce((latest, current) => {
-                const currentDate = parseDateToReal(current.date);
-                if (currentDate && currentDate > latest) {
-                    return currentDate;
-                }
-                return latest;
-            }, new Date(0)); // Start with a very old date
+            // ★ 修正: 基準日を「データの最後の日」ではなく「今日」にする
+            const latestDate = new Date();
+            latestDate.setHours(0, 0, 0, 0);
 
-            if (latestDateInData.getTime() === new Date(0).getTime()) {
-                return null; // No valid dates found in data
-            }
-            
-            const latestDate = latestDateInData;
-            latestDate.setHours(0, 0, 0, 0);
+            const startDate = new Date(latestDate.getTime());
+            startDate.setDate(startDate.getDate() - 6); // 7日間 (latestDateを含む)
 
-            const startDate = new Date(latestDate.getTime());
-            startDate.setDate(startDate.getDate() - 6); // 7日間 (latestDateを含む)
+            const recentData = data.filter(day => {
+                const d = parseDateToReal(day.date); // 実日付に変換
+                return d && d >= startDate && d <= latestDate;
+            });
+            
+            if (recentData.length === 0) {
+                return null; // この7日間にデータなし
+            }
 
-            const recentData = data.filter(day => {
-                const d = parseDateToReal(day.date); // 実日付に変換
-                return d && d >= startDate && d <= latestDate;
-            });
-            
-            if (recentData.length === 0) {
-                return null; // この7日間にデータなし
-            }
-
-            let includedDays = 0;
-            const totalValue = recentData.reduce((sum, day) => {
-                const value = day[key];
-                if (value !== null && value !== undefined && !isNaN(parseFloat(value))) {
-                    const numValue = parseFloat(value);
-                    includedDays++;
-                    return sum + numValue;
-                }
-                return sum;
-            }, 0);
-            
-            if (includedDays > 0) {
-                return totalValue / includedDays;
-            } else {
-                return null; // 有効なデータがなかった
-            }
-        }
+            let includedDays = 0;
+            const totalValue = recentData.reduce((sum, day) => {
+                const value = day[key];
+                if (value !== null && value !== undefined && !isNaN(parseFloat(value))) {
+                    const numValue = parseFloat(value);
+                    includedDays++;
+                    return sum + numValue;
+                }
+                return sum;
+            }, 0);
+            
+            if (includedDays > 0) {
+                return totalValue / includedDays;
+            } else {
+                return null; // 有効なデータがなかった
+            }
+        }
 
 
         function updateDashboard(data) {
