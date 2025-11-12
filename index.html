@@ -1411,41 +1411,42 @@
         }
 
         // 手動入力データ用のパーサー
-        function parseManualData(manualText, mapping) {
-            const dateRegex = /^\s*"?\s*(\d{4}[-\/]\d{1,2}[-\/]\d{1,2}|\d{1,2}\/\d{1,2}|\d{1,2}月\d{1,2}日?)\s*"?\s*$/i;
-            const lines = manualText.trim().split('\n');
-            const data = [];
-            
-            for (const line of lines) {
-                const parts = line.split(',');
-                if (parts.length < 2) continue;
-                
-                const dateVal = parts[0].trim();
-                const distVal = parts[1].trim();
+        // 手動入力データ用のパーサー
+        function parseManualData(manualText, mapping) {
+            const dateRegex = /^\s*"?\s*(\d{4}[-\/]\d{1,2}[-\/]\d{1,2}|\d{1,2}\/\d{1,2}|\d{1,2}月\d{1,2}日?)\s*"?\s*$/i; // 日本語対応
+            const lines = manualText.trim().split('\n');
+            const data = [];
+            
+            for (const line of lines) {
+                const parts = line.split(',');
+                if (parts.length < 2) continue;
+                
+                const dateVal = parts[0].trim();
+                const distVal = parts[1].trim();
 
-                if (dateVal && dateRegex.test(dateVal)) {
-                     const cleanValue = (val) => {
-                         if (val === undefined || val === null) return null;
-                         const trimmedVal = val.trim().replace(/^["']|["']$/g, '').trim();
-                         if (trimmedVal === "") return null;
-                         const num = parseFloat(trimmedVal);
-                         return isNaN(num) ? null : num;
-                    };
-                    const cleanDate = dateVal.trim().replace(/^["']|["']$/g, '').trim();
-                    
-                    data.push({
-                        date: cleanDate,
-                        distance: cleanValue(distVal),
-                        morningWeight: null,
-                        eveningWeight: null,
-                        wakingHr: null,
-                        practiceHr: null,
-                        sleep: null,
-                    });
-                }
-            }
-            return data;
-        }
+                if (dateVal && dateRegex.test(dateVal)) {
+                     const cleanValue = (val) => {
+                         if (val === undefined || val === null) return null;
+                         const trimmedVal = val.trim().replace(/^["']|["']$/g, '').trim();
+                         if (trimmedVal === "") return null;
+                         const num = parseFloat(trimmedVal);
+                         return isNaN(num) ? null : num;
+                    };
+                    const cleanDate = dateVal.trim().replace(/^["']|["']$/g, '').trim();
+                    
+                    data.push({
+                        date: cleanDate,
+                        distance: cleanValue(distVal),
+                        morningWeight: null,
+                        eveningWeight: null,
+                        wakingHr: null,
+                        practiceHr: null,
+                        sleep: null,
+                    });
+                }
+            }
+            return data;
+        }
 
 
         // データ読み込みのメインロジック (GAPI/手動 分岐)
