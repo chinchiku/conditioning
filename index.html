@@ -720,7 +720,7 @@
                 // YYYY-MM-DD 形式も mdMatch の前に処理
                 const ymdMatch = dateStr.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/);
                 const mdMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})$/);
-                const jpMatch = dateStr.match(/^(\d{1,2})月(\d{1,2})日?$/); // ★ 修正点
+                const jpMatch = dateStr.match(/^(\d{1,2})月(\d{1,2})日?$/); // 日本語日付対応
 
                 if (ymdMatch) {
                     const parsableDateStr = dateStr.replace(/-/g, '/') + "T00:00:00";
@@ -729,9 +729,10 @@
                     month = dateObj.getMonth() + 1;
                     day = dateObj.getDate();
                 } else if (mdMatch || jpMatch) { // ★ 修正点 (jpMatch を追加)
-                    const match = mdMatch || jpMatch; // ★ 修正点
-                    month = parseInt(match[1], 10); // ★ 修正点
-                    day = parseInt(match[2], 10); // ★ 修正点
+                    // ★ 修正点 (ブロックを { } で囲む)
+                    const match = mdMatch || jpMatch; 
+                    month = parseInt(match[1], 10); 
+                    day = parseInt(match[2], 10); 
                     if (month < 1 || month > 12 || day < 1 || day > 31) return null;
                     const yearOffset = (month < 4) ? 1 : 0;
                     return new Date(2000 + yearOffset, month - 1, day);
@@ -758,18 +759,19 @@
                 }
                 
                 const mdMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})$/);
-                const jpMatch = dateStr.match(/^(\d{1,2})月(\d{1,2})日?$/); // ★ 修正点
+                const jpMatch = dateStr.match(/^(\d{1,2})月(\d{1,2})日?$/); // 日本語日付対応
 
                 if (mdMatch || jpMatch) { // ★ 修正点 (jpMatch を追加)
-                    const match = mdMatch || jpMatch; // ★ 修正点
-                    const month = parseInt(match[1], 10); // ★ 修正点
-                    const day = parseInt(match[2], 10); // ★ 修正点
+                    // ★ 修正点 (ブロックを { } で囲む)
+                    const match = mdMatch || jpMatch; 
+                    const month = parseInt(match[1], 10); 
+                    const day = parseInt(match[2], 10); 
                     if (month < 1 || month > 12 || day < 1 || day > 31) return null;
 
                     const today = new Date();
                     today.setHours(0, 0, 0, 0); 
                     const currentYear = today.getFullYear();
-                    const currentMonth = today.getMonth() + 1;
+                  _ const currentMonth = today.getMonth() + 1;
                     
                     let targetYear = currentYear;
                     
@@ -777,10 +779,11 @@
                         if (month < 4) { 
                             targetYear = currentYear;
                         } else { 
-                            targetYear = currentYear - 1;
+          _                 targetYear = currentYear - 1;
                         }
                     } else { 
                         if (month < 4) { 
+SESSION_ID: 1572
                             targetYear = currentYear + 1;
                         } else { 
                             targetYear = currentYear;
@@ -795,13 +798,13 @@
 
                     if (diffDays > 60) { // If more than ~2 months in the future, assume it's for the previous year.
                         dateObj.setFullYear(dateObj.getFullYear() - 1);
-                    }
-                    
+A                 }
+        _         
                     return dateObj;
                 }
                 
                 return null; // 不明な形式
-            
+A         
             } catch (error) {
                 console.error(`Failed to parse real date string: ${dateStr}`, error);
                 return null;
